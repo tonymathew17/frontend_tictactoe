@@ -1,12 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { WebSocketService } from '../web-socket.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-board',
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.css']
 })
-export class BoardComponent implements OnInit {
+export class BoardComponent implements OnInit, OnDestroy {
+  private subscription: Subscription;
+  private tile1Disabled: boolean = false;
+  private tile2Disabled: boolean = false;
+  private tile3Disabled: boolean = false;
+  private tile4Disabled: boolean = false;
+  private tile5Disabled: boolean = false;
+  private tile6Disabled: boolean = false;
+  private tile7Disabled: boolean = false;
+  private tile8Disabled: boolean = false;
+  private tile9Disabled: boolean = false;
 
   tile: number;
   tile1: any;
@@ -24,114 +35,55 @@ export class BoardComponent implements OnInit {
   ngOnInit() {
   }
 
-  resetCells(tileClicked: number, computerMove: number) {
-    if (tileClicked == 1) {
-      this.tile1 = computerMove;
-      this.tile2 = "";
-      this.tile3 = "";
-      this.tile4 = "";
-      this.tile5 = "";
-      this.tile6 = "";
-      this.tile7 = "";
-      this.tile8 = "";
-      this.tile9 = "";
+  resetCells(tile: number, symbol: string): void {
+    if (tile == 1) {
+      this.tile1Disabled = true;
+      this.tile1 = symbol;
     }
-    else if (tileClicked == 2) {
-      this.tile2 = computerMove;
-      this.tile1 = "";
-      this.tile3 = "";
-      this.tile4 = "";
-      this.tile5 = "";
-      this.tile6 = "";
-      this.tile7 = "";
-      this.tile8 = "";
-      this.tile9 = "";
+    if (tile == 2) {
+      this.tile2Disabled = true;
+      this.tile2 = symbol;
     }
-    else if (tileClicked == 3) {
-      this.tile3 = computerMove;
-      this.tile2 = "";
-      this.tile1 = "";
-      this.tile4 = "";
-      this.tile5 = "";
-      this.tile6 = "";
-      this.tile7 = "";
-      this.tile8 = "";
-      this.tile9 = "";
+    if (tile == 3) {
+      this.tile3Disabled = true;
+      this.tile3 = symbol;
     }
-    else if (tileClicked == 4) {
-      this.tile4 = computerMove;
-      this.tile2 = "";
-      this.tile3 = "";
-      this.tile1 = "";
-      this.tile5 = "";
-      this.tile6 = "";
-      this.tile7 = "";
-      this.tile8 = "";
-      this.tile9 = "";
+    if (tile == 4) {
+      this.tile4Disabled = true;
+      this.tile4 = symbol;
     }
-    else if (tileClicked == 5) {
-      this.tile5 = computerMove;
-      this.tile2 = "";
-      this.tile3 = "";
-      this.tile4 = "";
-      this.tile1 = "";
-      this.tile6 = "";
-      this.tile7 = "";
-      this.tile8 = "";
-      this.tile9 = "";
+    if (tile == 5) {
+      this.tile5Disabled = true;
+      this.tile5 = symbol;
     }
-    else if (tileClicked == 6) {
-      this.tile6 = computerMove;
-      this.tile2 = "";
-      this.tile3 = "";
-      this.tile4 = "";
-      this.tile5 = "";
-      this.tile1 = "";
-      this.tile7 = "";
-      this.tile8 = "";
-      this.tile9 = "";
+    if (tile == 6) {
+      this.tile6Disabled = true;
+      this.tile6 = symbol;
     }
-    else if (tileClicked == 7) {
-      this.tile7 = computerMove;
-      this.tile2 = "";
-      this.tile3 = "";
-      this.tile4 = "";
-      this.tile5 = "";
-      this.tile6 = "";
-      this.tile1 = "";
-      this.tile8 = "";
-      this.tile9 = "";
+    if (tile == 7) {
+      this.tile7Disabled = true;
+      this.tile7 = symbol;
     }
-    else if (tileClicked == 8) {
-      this.tile8 = computerMove;
-      this.tile2 = "";
-      this.tile3 = "";
-      this.tile4 = "";
-      this.tile5 = "";
-      this.tile6 = "";
-      this.tile7 = "";
-      this.tile1 = "";
-      this.tile9 = "";
+    if (tile == 8) {
+      this.tile8Disabled = true;
+      this.tile8 = symbol;
     }
-    else if (tileClicked == 9) {
-      this.tile9 = computerMove;
-      this.tile2 = "";
-      this.tile3 = "";
-      this.tile4 = "";
-      this.tile5 = "";
-      this.tile6 = "";
-      this.tile7 = "";
-      this.tile8 = "";
-      this.tile1 = "";
+    if (tile == 9) {
+      this.tile9Disabled = true;
+      this.tile9 = symbol;
     }
   }
 
-  onCellClicked(tile) {
-    this.webSocketService.recieveMessage(tile).subscribe((computerMove: number) => {
-      console.log('tile>>>>>>>>>>>>>>>>>>>>.', tile);
-      console.log('computerMove>>>>>>>>>>>>>>>>>>>>.', computerMove);
-      this.resetCells(tile, computerMove);
+  onCellClicked(tile): void {
+    this.resetCells(tile, "X");
+    this.subscription = this.webSocketService.recieveMessage(tile).subscribe((computerMove: number) => {
+      this.resetCells(computerMove, "O");
+      this.subscription.unsubscribe();
     });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
 }
