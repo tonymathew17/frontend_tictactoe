@@ -1,5 +1,11 @@
-button {
+.gridButton {
     width: 100%;
     height: 100%;
     background: lightseagreen;
+}
+
+.Refresh {
+    width: 100px;
+    height: 30px;
+    display: inline-block;
 }

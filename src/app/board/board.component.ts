@@ -35,7 +35,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   ngOnInit() {
   }
 
-  resetCells(tile: number, symbol: string): void {
+  markCell(tile: number, symbol: string): void {
     if (tile == 1) {
       this.tile1Disabled = true;
       this.tile1 = symbol;
@@ -74,11 +74,47 @@ export class BoardComponent implements OnInit, OnDestroy {
     }
   }
 
+  refreshCells(): void {
+    this.tile1 = "";
+    this.tile2 = "";
+    this.tile3 = "";
+    this.tile4 = "";
+    this.tile5 = "";
+    this.tile6 = "";
+    this.tile7 = "";
+    this.tile8 = "";
+    this.tile9 = "";
+  }
+
+  disableEnableCells(disableOrEnable: boolean): void {
+    this.tile1Disabled = disableOrEnable;
+    this.tile2Disabled = disableOrEnable;
+    this.tile3Disabled = disableOrEnable;
+    this.tile4Disabled = disableOrEnable;
+    this.tile5Disabled = disableOrEnable;
+    this.tile6Disabled = disableOrEnable;
+    this.tile7Disabled = disableOrEnable;
+    this.tile8Disabled = disableOrEnable;
+    this.tile9Disabled = disableOrEnable;
+  }
+
   onCellClicked(tile): void {
-    this.resetCells(tile, "X");
+    this.markCell(tile, "X");
     this.subscription = this.webSocketService.recieveMessage(tile).subscribe((computerMove: number) => {
-      this.resetCells(computerMove, "O");
+      if (!(typeof computerMove === 'number')) {
+        console.log("Not a number!");
+      }
+      this.markCell(computerMove, "O");
       this.subscription.unsubscribe();
+    });
+  }
+
+  refreshBoard(): void {
+    this.webSocketService.refreshBoard().subscribe(result => {
+      if (result === 'Memory cleared!') {
+        this.refreshCells();
+        this.disableEnableCells(false);
+      }
     });
   }
 

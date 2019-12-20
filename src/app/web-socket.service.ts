@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
-import { Observable, Subscriber, observable } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -10,16 +12,10 @@ export class WebSocketService {
   private socket: any;
   tempReply: number;
 
-  constructor() {
+  constructor(private http: HttpClient) {
     this.socket = io.connect(this.url);
   }
 
-  // sendMessage(msg: string) {
-  //   this.socket.emit('tileClicked', msg);
-  //   this.socket.on('tempReply', (data) => {
-  //     this.tempReply = data;
-  //   })
-  // }
   recieveMessage(tile: number) {
     this.socket.emit('tileClicked', tile);
 
@@ -28,6 +24,11 @@ export class WebSocketService {
         observable.next(computerMove);
       })
     });
+  }
+
+  refreshBoard() {
+    return this.http.get('http://localhost:3333/refreshBoard', { responseType: 'text' })
+      .pipe(map((result: any) => result));
   }
 
 }
