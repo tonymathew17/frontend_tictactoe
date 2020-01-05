@@ -1,50 +1,17 @@
-<div class="parentDiv">
-    <mat-grid-list cols="3">
-        <mat-grid-tile>
-            <button class="gridButton" [disabled]="tile1Disabled" (click)="onCellClicked(1)">
-                {{tile1}}
-            </button>
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <button class="gridButton" [disabled]="tile2Disabled" (click)="onCellClicked(2)">
-                {{tile2}}
-            </button>
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <button class="gridButton" [disabled]="tile3Disabled" (click)="onCellClicked(3)">
-                {{tile3}}
-            </button>
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <button class="gridButton" [disabled]="tile4Disabled" (click)="onCellClicked(4)">
-                {{tile4}}
-            </button>
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <button class="gridButton" [disabled]="tile5Disabled" (click)="onCellClicked(5)">
-                {{tile5}}
-            </button>
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <button class="gridButton" [disabled]="tile6Disabled" (click)="onCellClicked(6)">
-                {{tile6}}
-            </button>
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <button class="gridButton" [disabled]="tile7Disabled" (click)="onCellClicked(7)">
-                {{tile7}}
-            </button>
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <button class="gridButton" [disabled]="tile8Disabled" (click)="onCellClicked(8)">
-                {{tile8}}
-            </button>
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <button class="gridButton" [disabled]="tile9Disabled" (click)="onCellClicked(9)">
-                {{tile9}}
-            </button>
-        </mat-grid-tile>
-    </mat-grid-list>
-    <button class="Refresh" (click)="refreshBoard()">Refresh</button>
-</div>
+<table>
+    <tr>
+        <td class="cell" id="0"></td>
+        <td class="cell" id="1"></td>
+        <td class="cell" id="2"></td>
+    </tr>
+    <tr>
+        <td class="cell" id="3"></td>
+        <td class="cell" id="4"></td>
+        <td class="cell" id="5"></td>
+    </tr>
+    <tr>
+        <td class="cell" id="6"></td>
+        <td class="cell" id="7"></td>
+        <td class="cell" id="8"></td>
+    </tr>
+</table>

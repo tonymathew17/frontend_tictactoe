@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { WebSocketService } from '../web-socket.service';
 import { Subscription } from 'rxjs';
+import { fadeInContent } from '@angular/material';
 
 @Component({
   selector: 'app-board',
@@ -33,46 +34,69 @@ export class BoardComponent implements OnInit, OnDestroy {
   constructor(private webSocketService: WebSocketService) { }
 
   ngOnInit() {
+    let cells = document.querySelectorAll('.cell');
+    for (let i = 0; i < cells.length; i++) {
+      cells[i].addEventListener('click', this.cellClicked.bind(this), false);
+    }
   }
 
-  markCell(tile: number, symbol: string): void {
-    if (tile == 1) {
-      this.tile1Disabled = true;
-      this.tile1 = symbol;
-    }
-    if (tile == 2) {
-      this.tile2Disabled = true;
-      this.tile2 = symbol;
-    }
-    if (tile == 3) {
-      this.tile3Disabled = true;
-      this.tile3 = symbol;
-    }
-    if (tile == 4) {
-      this.tile4Disabled = true;
-      this.tile4 = symbol;
-    }
-    if (tile == 5) {
-      this.tile5Disabled = true;
-      this.tile5 = symbol;
-    }
-    if (tile == 6) {
-      this.tile6Disabled = true;
-      this.tile6 = symbol;
-    }
-    if (tile == 7) {
-      this.tile7Disabled = true;
-      this.tile7 = symbol;
-    }
-    if (tile == 8) {
-      this.tile8Disabled = true;
-      this.tile8 = symbol;
-    }
-    if (tile == 9) {
-      this.tile9Disabled = true;
-      this.tile9 = symbol;
-    }
+  cellClicked(clickedCellEvent) {
+    let clickedCell = clickedCellEvent.target.id;
+    // disabling clicked cell
+    document.getElementById(clickedCell).removeEventListener('click', this.cellClicked, false);
+    clickedCellEvent.target.innerText = 'X';
+    this.subscription = this.webSocketService.recieveMessage(+clickedCell).subscribe((computerMove: number) => {
+      if (!(typeof computerMove === 'number')) {
+        console.log("Not a number!");
+      }
+      console.log('computerMove: ', computerMove);
+      this.markCell(computerMove);
+      this.subscription.unsubscribe();
+    });
   }
+
+  markCell(computerMove) {
+    document.getElementById(computerMove).innerHTML = 'O';
+  }
+
+  /*   markCell(tile: number, symbol: string): void {
+      if (tile == 1) {
+        this.tile1Disabled = true;
+        this.tile1 = symbol;
+      }
+      if (tile == 2) {
+        this.tile2Disabled = true;
+        this.tile2 = symbol;
+      }
+      if (tile == 3) {
+        this.tile3Disabled = true;
+        this.tile3 = symbol;
+      }
+      if (tile == 4) {
+        this.tile4Disabled = true;
+        this.tile4 = symbol;
+      }
+      if (tile == 5) {
+        this.tile5Disabled = true;
+        this.tile5 = symbol;
+      }
+      if (tile == 6) {
+        this.tile6Disabled = true;
+        this.tile6 = symbol;
+      }
+      if (tile == 7) {
+        this.tile7Disabled = true;
+        this.tile7 = symbol;
+      }
+      if (tile == 8) {
+        this.tile8Disabled = true;
+        this.tile8 = symbol;
+      }
+      if (tile == 9) {
+        this.tile9Disabled = true;
+        this.tile9 = symbol;
+      }
+    } */
 
   refreshCells(): void {
     this.tile1 = "";
@@ -98,16 +122,18 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.tile9Disabled = disableOrEnable;
   }
 
-  onCellClicked(tile): void {
-    this.markCell(tile, "X");
-    this.subscription = this.webSocketService.recieveMessage(tile).subscribe((computerMove: number) => {
-      if (!(typeof computerMove === 'number')) {
-        console.log("Not a number!");
-      }
-      this.markCell(computerMove, "O");
-      this.subscription.unsubscribe();
-    });
-  }
+  /*     onCellClicked(tile): void {
+        console.log('tile>>>>>>>>>>', tile);
+        this.markCell(tile, "X");
+        this.subscription = this.webSocketService.recieveMessage(tile).subscribe((computerMove: number) => {
+          if (!(typeof computerMove === 'number')) {
+            console.log("Not a number!");
+          }
+          console.log('computerMove>>>>>>>>>>', computerMove);
+          this.markCell(computerMove, "O");
+          this.subscription.unsubscribe();
+        });
+      } */
 
   refreshBoard(): void {
     this.webSocketService.refreshBoard().subscribe(result => {
