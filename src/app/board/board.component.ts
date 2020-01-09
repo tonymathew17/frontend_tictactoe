@@ -34,6 +34,12 @@ export class BoardComponent implements OnInit, OnDestroy {
   constructor(private webSocketService: WebSocketService) { }
 
   ngOnInit() {
+    // Setting up game
+    this.subscription = this.webSocketService.setupGame(3).subscribe((response: JSON) => {
+      console.log('setupGame response: ', response);
+      this.subscription.unsubscribe();
+    });
+
     let cells = document.querySelectorAll('.cell');
     for (let i = 0; i < cells.length; i++) {
       cells[i].addEventListener('click', this.cellClicked.bind(this), false);
@@ -45,12 +51,9 @@ export class BoardComponent implements OnInit, OnDestroy {
     // disabling clicked cell
     document.getElementById(clickedCell).removeEventListener('click', this.cellClicked, false);
     clickedCellEvent.target.innerText = 'X';
-    this.subscription = this.webSocketService.recieveMessage(+clickedCell).subscribe((computerMove: number) => {
-      if (!(typeof computerMove === 'number')) {
-        console.log("Not a number!");
-      }
-      console.log('computerMove: ', computerMove);
-      this.markCell(computerMove);
+    this.subscription = this.webSocketService.recieveMessage(+clickedCell).subscribe((response: any) => {
+      console.log('response: ', response);
+      response.computerMove ? this.markCell(response.computerMove) : console.log('response: ', response);
       this.subscription.unsubscribe();
     });
   }
