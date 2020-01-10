@@ -10,15 +10,17 @@ import { fadeInContent } from '@angular/material';
 })
 export class BoardComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
-  private tile1Disabled: boolean = false;
-  private tile2Disabled: boolean = false;
-  private tile3Disabled: boolean = false;
-  private tile4Disabled: boolean = false;
-  private tile5Disabled: boolean = false;
-  private tile6Disabled: boolean = false;
-  private tile7Disabled: boolean = false;
-  private tile8Disabled: boolean = false;
-  private tile9Disabled: boolean = false;
+  /*   private tile1Disabled: boolean = false;
+    private tile2Disabled: boolean = false;
+    private tile3Disabled: boolean = false;
+    private tile4Disabled: boolean = false;
+    private tile5Disabled: boolean = false;
+    private tile6Disabled: boolean = false;
+    private tile7Disabled: boolean = false;
+    private tile8Disabled: boolean = false;
+    private tile9Disabled: boolean = false; */
+  readonly human: string = 'human';
+  readonly computer: string = 'computer';
 
   tile: number;
   tile1: any;
@@ -30,19 +32,27 @@ export class BoardComponent implements OnInit, OnDestroy {
   tile7: any;
   tile8: any;
   tile9: any;
+  cells: NodeList;
+  boardsize: number = 3;
+  cellList: Array<number>;
 
   constructor(private webSocketService: WebSocketService) { }
 
   ngOnInit() {
+    (<HTMLElement>document.querySelector(".endgame")).style.display = "none";
     // Setting up game
-    this.subscription = this.webSocketService.setupGame(3).subscribe((response: JSON) => {
+
+    this.subscription = this.webSocketService.setupGame(this.boardsize).subscribe((response: any) => {
       console.log('setupGame response: ', response);
+      // Generating possible cells
+      this.cellList = response;
+
       this.subscription.unsubscribe();
     });
 
-    let cells = document.querySelectorAll('.cell');
-    for (let i = 0; i < cells.length; i++) {
-      cells[i].addEventListener('click', this.cellClicked.bind(this), false);
+    this.cells = document.querySelectorAll('.cell');
+    for (let i = 0; i < this.cells.length; i++) {
+      this.cells[i].addEventListener('click', this.cellClicked.bind(this), false);
     }
   }
 
@@ -50,56 +60,53 @@ export class BoardComponent implements OnInit, OnDestroy {
     let clickedCell = clickedCellEvent.target.id;
     // disabling clicked cell
     document.getElementById(clickedCell).removeEventListener('click', this.cellClicked, false);
-    clickedCellEvent.target.innerText = 'X';
-    this.subscription = this.webSocketService.recieveMessage(+clickedCell).subscribe((response: any) => {
+    // Marking player move in the board
+    this.markCell(this.human, clickedCell);
+    // Connecting with backend server to get computerMove/Result
+    this.subscription = this.webSocketService.getComputerMove(+clickedCell).subscribe((response: any) => {
       console.log('response: ', response);
-      response.computerMove ? this.markCell(response.computerMove) : console.log('response: ', response);
+      if (response.computerMove) this.markCell(this.computer, response.computerMove);
+      if (response.winner && response.winningCombination) {
+        this.disableEnableCells(true);
+        this.highlightCells(response.winner, response.winningCombination);
+        this.showResult(response.winner);
+      }
       this.subscription.unsubscribe();
     });
   }
 
-  markCell(computerMove) {
-    document.getElementById(computerMove).innerHTML = 'O';
+  showResult(winner) {
+    let text = ""
+    if (winner === 'tie') {
+      text = 'Tied!'
+    }
+    else {
+      text = winner === this.human ? "You Won!" : "You Lose!";
+    }
+    (<HTMLElement>document.querySelector(".endgame")).style.display = "block";
+    (<HTMLElement>document.querySelector(".endgame .text")).innerText = text;
   }
 
-  /*   markCell(tile: number, symbol: string): void {
-      if (tile == 1) {
-        this.tile1Disabled = true;
-        this.tile1 = symbol;
-      }
-      if (tile == 2) {
-        this.tile2Disabled = true;
-        this.tile2 = symbol;
-      }
-      if (tile == 3) {
-        this.tile3Disabled = true;
-        this.tile3 = symbol;
-      }
-      if (tile == 4) {
-        this.tile4Disabled = true;
-        this.tile4 = symbol;
-      }
-      if (tile == 5) {
-        this.tile5Disabled = true;
-        this.tile5 = symbol;
-      }
-      if (tile == 6) {
-        this.tile6Disabled = true;
-        this.tile6 = symbol;
-      }
-      if (tile == 7) {
-        this.tile7Disabled = true;
-        this.tile7 = symbol;
-      }
-      if (tile == 8) {
-        this.tile8Disabled = true;
-        this.tile8 = symbol;
-      }
-      if (tile == 9) {
-        this.tile9Disabled = true;
-        this.tile9 = symbol;
-      }
-    } */
+  highlightCells(winner, cellsNeedingHiglight) {
+    let className = 'winner';
+    if (winner === 'tie') {
+      className = 'tie';
+      cellsNeedingHiglight = this.cellList;
+    }
+    let cells = document.querySelectorAll(".cell");
+    for (let i = 0; i < cellsNeedingHiglight.length; i++) {
+      let cell = cellsNeedingHiglight[i];
+      cells[cell].className = className;
+    }
+  }
+
+  markCell(player, cell) {
+    if (player === this.computer) {
+      document.getElementById(cell).innerHTML = 'O';
+    } else if (player === this.human) {
+      document.getElementById(cell).innerHTML = 'X';
+    }
+  }
 
   refreshCells(): void {
     this.tile1 = "";
@@ -114,15 +121,10 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   disableEnableCells(disableOrEnable: boolean): void {
-    this.tile1Disabled = disableOrEnable;
-    this.tile2Disabled = disableOrEnable;
-    this.tile3Disabled = disableOrEnable;
-    this.tile4Disabled = disableOrEnable;
-    this.tile5Disabled = disableOrEnable;
-    this.tile6Disabled = disableOrEnable;
-    this.tile7Disabled = disableOrEnable;
-    this.tile8Disabled = disableOrEnable;
-    this.tile9Disabled = disableOrEnable;
+    console.log('Result obtained, disabling cells');
+    for (let i = 0; i < this.cells.length; i++) {
+      this.cells[i].removeEventListener('click', this.cellClicked, false);
+    }
   }
 
   /*     onCellClicked(tile): void {

@@ -16,7 +16,7 @@ export class WebSocketService {
     this.socket = io.connect(this.url);
   }
 
-  recieveMessage(tile: number) {
+  getComputerMove(tile: number) {
     this.socket.emit('tileClicked', tile);
 
     return new Observable((observable) => {
