@@ -16,7 +16,7 @@ export class WebSocketService {
     this.socket = io.connect(this.url);
   }
 
-  recieveMessage(tile: number) {
+  getComputerMove(tile: number) {
     this.socket.emit('tileClicked', tile);
 
     return new Observable((observable) => {
@@ -27,8 +27,13 @@ export class WebSocketService {
   }
 
   refreshBoard() {
-    return this.http.get('http://localhost:3333/refreshBoard', { responseType: 'text' })
+    return this.http.post('http://localhost:3333/refreshBoard', { responseType: 'text' })
       .pipe(map((result: any) => result));
+  }
+
+  setupGame(boardSize: number) {
+    return this.http.post('http://localhost:3333/setupGame/' + boardSize, { responseType: 'json' })
+      .pipe(map((result: JSON) => result));
   }
 
 }
