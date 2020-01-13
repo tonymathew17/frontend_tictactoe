@@ -65,7 +65,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     // Connecting with backend server to get computerMove/Result
     this.subscription = this.webSocketService.getComputerMove(+clickedCell).subscribe((response: any) => {
       console.log('response: ', response);
-      if (response.computerMove) this.markCell(this.computer, response.computerMove);
+      if (Object.keys(response).includes("computerMove")) this.markCell(this.computer, response.computerMove);
       if (response.winner && response.winningCombination) {
         this.disableEnableCells(true);
         this.highlightCells(response.winner, response.winningCombination);
