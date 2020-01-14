@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { WebSocketService } from '../web-socket.service';
 import { Subscription } from 'rxjs';
 
@@ -7,11 +7,12 @@ import { Subscription } from 'rxjs';
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.css']
 })
-export class BoardComponent implements OnInit, OnDestroy {
+export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   private subscription: Subscription;
   readonly human: string = 'human';
   readonly computer: string = 'computer';
 
+  boardConfig: Array<Array<number>> = [[0, 1, 2], [3, 4, 5], [6, 7, 8]];
   cells: NodeList;
   boardsize: number = 3;
   cellList: Array<number>;
@@ -30,7 +31,10 @@ export class BoardComponent implements OnInit, OnDestroy {
       this.cellList = response;
       this.subscription.unsubscribe();
     });
+  }
 
+  // This function is called when the document is ready
+  ngAfterViewInit() {
     // making cells clickable
     this.cells = document.querySelectorAll('.cell');
     for (let i = 0; i < this.cells.length; i++) {
