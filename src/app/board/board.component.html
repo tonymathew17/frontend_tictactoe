@@ -1,8 +1,10 @@
-<table>
-    <tr *ngFor="let row of boardConfig">
-        <td *ngFor="let cell of row" class="cell" [attr.id]="cell"></td>
-    </tr>
-</table>
-<div class="endgame">
-    <div class="text"></div>
+<div class="tableWrapper">
+    <table>
+        <tr *ngFor="let row of boardConfig">
+            <td *ngFor="let cell of row" class="cell" [attr.id]="cell"></td>
+        </tr>
+    </table>
+    <div class="endgame">
+        <div class="text"></div>
+    </div>
 </div>

@@ -12,8 +12,12 @@ td {
 table {
     border-collapse: collapse;
     position: absolute;
-    left: 25%;
-    top: 3%;
+    /*     left: 25%;
+    top: 3%; */
+}
+
+.tableWrapper {
+    position: relative;
 }
 
 table tr:first-child td {
