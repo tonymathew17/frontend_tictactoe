@@ -12,7 +12,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   readonly human: string = 'human';
   readonly computer: string = 'computer';
 
-  boardConfig: Array<Array<number>> = [[0, 1, 2], [3, 4, 5], [6, 7, 8]];
+  boardConfig: Array<Array<number>>;
   cells: NodeList;
   boardsize: number = 3;
   cellList: Array<number>;
@@ -21,6 +21,8 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(private webSocketService: WebSocketService) { }
 
   ngOnInit() {
+    this.generateBoardConfig(this.boardsize);
+    console.log(this.boardConfig);
     (<HTMLElement>document.querySelector(".endgame")).style.display = "none";
     this.cellClickedReference = this.cellClicked.bind(this);
 
@@ -39,6 +41,18 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.cells = document.querySelectorAll('.cell');
     for (let i = 0; i < this.cells.length; i++) {
       this.cells[i].addEventListener('click', this.cellClickedReference, false);
+    }
+  }
+
+  generateBoardConfig(boardsize: number) {
+    this.boardConfig = [];
+    let arr = [];
+    for (let i = 0; i < (boardsize * boardsize); i++) {
+      arr.push(i)
+      if (arr.length === boardsize) {
+        this.boardConfig.push(arr);
+        arr = [];
+      }
     }
   }
 

@@ -1,23 +1,31 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+    padding: 0;
+}
+
 td {
     border: 2px solid #333;
-    height: 200px;
-    width: 200px;
     text-align: center;
     vertical-align: middle;
     font-family: "Comic Sans MS", sans-serif;
-    font-size: 100px;
+    font-size: 16px;
+    font-size: 3.75vw;
     cursor: pointer;
 }
 
 table {
+    table-layout: fixed;
     border-collapse: collapse;
-    position: absolute;
+    height: 100%;
+    width: 100%;
     /*     left: 25%;
     top: 3%; */
 }
 
 .tableWrapper {
-    position: relative;
+    width: 600px;
+    height: 600px;
 }
 
 table tr:first-child td {
