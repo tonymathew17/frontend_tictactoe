@@ -1,19 +1,20 @@
-<div class="filterArea">
-    <mat-form-field>
-        <mat-label>Select board size:</mat-label>
-        <mat-select [(value)]="selectedBoardSize" (selectionChange)="newBoardSizeSelected()">
-            <mat-option *ngFor="let boardSize of boardSizeList" [value]="boardSize">{{boardSize}}</mat-option>
-        </mat-select>
-    </mat-form-field>
-</div>
-
-<div class="tableWrapper">
-    <table>
-        <tr *ngFor="let row of boardConfig">
-            <td *ngFor="let cell of row" class="cell" [attr.id]="cell"></td>
-        </tr>
-    </table>
-    <div class="endgame">
-        <div class="text"></div>
-    </div>
+<table>
+    <tr>
+        <td class="cell" id="0"></td>
+        <td class="cell" id="1"></td>
+        <td class="cell" id="2"></td>
+    </tr>
+    <tr>
+        <td class="cell" id="3"></td>
+        <td class="cell" id="4"></td>
+        <td class="cell" id="5"></td>
+    </tr>
+    <tr>
+        <td class="cell" id="6"></td>
+        <td class="cell" id="7"></td>
+        <td class="cell" id="8"></td>
+    </tr>
+</table>
+<div class="endgame">
+    <div class="text"></div>
 </div>
