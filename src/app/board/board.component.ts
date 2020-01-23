@@ -14,20 +14,26 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   boardConfig: Array<Array<number>>;
   cells: NodeList;
-  boardsize: number = 3;
   cellList: Array<number>;
   cellClickedReference: any;
+  selectedBoardSize: number;
 
   constructor(private webSocketService: WebSocketService) { }
 
+  boardSizeList: Array<number> = [3, 4, 5, 6, 7, 8, 9, 10];
+
   ngOnInit() {
-    this.generateBoardConfig(this.boardsize);
-    console.log(this.boardConfig);
-    (<HTMLElement>document.querySelector(".endgame")).style.display = "none";
     this.cellClickedReference = this.cellClicked.bind(this);
+    this.setupGame(3);
+  }
+
+  setupGame(boardsize) {
+    this.generateBoardConfig(boardsize);
+    (<HTMLElement>document.querySelector(".endgame")).style.display = "none";
 
     // Setting up game
-    this.subscription = this.webSocketService.setupGame(this.boardsize).subscribe((response: any) => {
+    this.subscription = this.webSocketService.setupGame(boardsize).subscribe((response: any) => {
+      this.makeCellsClickable();
       console.log('setupGame response: ', response);
       // Generating possible cells
       this.cellList = response;
@@ -35,13 +41,23 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  // This function is called when the document is ready
-  ngAfterViewInit() {
+  newBoardSizeSelected() {
+    if (this.boardSizeList.includes(this.selectedBoardSize)) {
+      this.setupGame(this.selectedBoardSize);
+    }
+  }
+
+  makeCellsClickable() {
     // making cells clickable
     this.cells = document.querySelectorAll('.cell');
     for (let i = 0; i < this.cells.length; i++) {
       this.cells[i].addEventListener('click', this.cellClickedReference, false);
     }
+  }
+
+  // This function is called when the document is ready
+  ngAfterViewInit() {
+    this.makeCellsClickable();
   }
 
   generateBoardConfig(boardsize: number) {
@@ -91,23 +107,27 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   highlightCells(winner, cellsNeedingHighlight) {
-    let className = 'winner';
     if (winner === 'tie') {
-      className = 'tie';
       cellsNeedingHighlight = this.cellList;
     }
-    let cells = document.querySelectorAll(".cell");
     for (let i = 0; i < cellsNeedingHighlight.length; i++) {
-      let cell = cellsNeedingHighlight[i];
-      cells[cell].className = className;
+      this.markCell(winner, cellsNeedingHighlight[i], true);
     }
   }
 
-  markCell(player, cell) {
+  markCell(player, cell, winner = null) {
     if (player === this.computer) {
-      document.getElementById(cell).innerHTML = 'O';
+      if (winner) {
+        document.getElementById(cell).style.backgroundImage = 'url(assets/img/O_Won.svg)';
+      } else {
+        document.getElementById(cell).style.backgroundImage = 'url(assets/img/O.svg)';
+      }
     } else if (player === this.human) {
-      document.getElementById(cell).innerHTML = 'X';
+      if (winner) {
+        document.getElementById(cell).style.backgroundImage = 'url(assets/img/X_Won.svg)';
+      } else {
+        document.getElementById(cell).style.backgroundImage = 'url(assets/img/X.svg)';
+      }
     }
   }
 

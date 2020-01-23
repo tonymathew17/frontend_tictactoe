@@ -1,3 +1,12 @@
+<div class="filterArea">
+    <mat-form-field>
+        <mat-label>Select board size:</mat-label>
+        <mat-select [(value)]="selectedBoardSize" (selectionChange)="newBoardSizeSelected()">
+            <mat-option *ngFor="let boardSize of boardSizeList" [value]="boardSize">{{boardSize}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+
 <div class="tableWrapper">
     <table>
         <tr *ngFor="let row of boardConfig">

@@ -8,10 +8,12 @@ td {
     border: 2px solid #333;
     text-align: center;
     vertical-align: middle;
-    font-family: "Comic Sans MS", sans-serif;
-    font-size: 16px;
-    font-size: 3.75vw;
     cursor: pointer;
+    background-repeat: no-repeat;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
 }
 
 table {
@@ -19,13 +21,12 @@ table {
     border-collapse: collapse;
     height: 100%;
     width: 100%;
-    /*     left: 25%;
-    top: 3%; */
 }
 
 .tableWrapper {
     width: 600px;
     height: 600px;
+    padding: 10px;
 }
 
 table tr:first-child td {
@@ -44,14 +45,6 @@ table tr td:last-child {
     border-right: 0;
 }
 
-.winner {
-    background-color: forestgreen;
-}
-
-.tie {
-    background-color: grey;
-}
-
 .endgame {
     display: none;
     width: 350px;
@@ -67,4 +60,9 @@ table tr td:last-child {
     border-radius: 5px;
     color: white;
     font-size: 2em;
+}
+
+.filterArea {
+    align-items: center;
+    padding: 5px;
 }

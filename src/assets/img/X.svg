@@ -1,15 +1,22 @@
-<svg width="580" height="400" xmlns="http://www.w3.org/2000/svg">
- <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
- <g>
-  <title>background</title>
-  <rect fill="#fff" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
-  <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
-   <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
-  </g>
- </g>
- <g>
-  <title>Layer 1</title>
-  <line stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_3" y2="208.453125" x2="193.5" y1="110.453125" x1="84.5" stroke-width="1.5" stroke="#000" fill="none"/>
-  <line stroke="#000" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_4" y2="208.453125" x2="86.5" y1="111.453125" x1="188.5" stroke-width="1.5" fill="none"/>
- </g>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="151px" height="150px" viewBox="0 0 151 150" enable-background="new 0 0 151 150" xml:space="preserve">  <image id="image0" width="151" height="150" x="0" y="0"
+    xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJcAAACWCAAAAAD2qEUAAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
+AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZ
+cwAADsIAAA7CARUoSoAAAAAHdElNRQfkARYSHTjB33FbAAACy0lEQVR42s3cSXKDMBCF4VfZuLj/
+eXw2snDZTAL1BPq9i43UX2LC0LRasyRpes+Q13uSJOnjwsC+rK8LAvuxfi4EbGEtLgBsxdI8YWAr
+1qTNT0NhG4hmCmzL0AyB7RBqvAdgfVzjYQeATt4fzPq6xsIawXXx2UDW4hoHawZW5/NBrLVrDOwk
+qAzbDGBtXc/DTgPKuN3DrL3rWdhFMDm2fZB1dD0Huwwk5/YPsVquZ2CdIAqMeYDVdt0P6wZQcNzN
+rDPXvTDD5EqMvZF17roPZppYyfE3sa5c98CMk6pgjhtY1656mHlCFc1TzOq5amGOyXquSphnqq6r
+DuaaqO+qgvmmMbhqYM5JLK4KmHcKkysPc09gc2Vh/uFGVw4WGGx1ZWCRoWZXHBYaaHdFYbFhDlcs
+QvC38bgiMaLfvsvljxLeKX0ub5z4P7HT5YuUOLZ4XZ5YmWOx22WPljpF+F3WeLlTasBli5g800dc
+lpjZK6OQqx81fcEWc/Xi5i9wg67ryAXX3VHXVeyK+5Sw6zx6ye1T3HUWv+Z2M+FqC4rugjOulqEq
+a5ByHRVlyYyca++oS/4kXVtJYU4q61rDXq8yVt61KXIrYxW4GrCCVGyB6wCryBBXuHawkox6iWt+
+L3u8XiWJ/j9BXyV/Lub3CN3voccJ6HEVeh6Cnreh1znQ60LodTT0vgN6nwa9r4XmAaB5E2ieCZqX
+g+YxoXlfaJ4c+lwB+hwG+twK+pwP+lwU+hwZ+twdWqcAreuA1sFA64agdVbQujRoHR+07hFaJwqt
+q4XWIUPrtqF17tB1AdB1FNB1J9B1OtB1TdB1YNB1c9B1htB1mdB1rNB1v9B10tB15dB1+NC+BdA+
+D9C+GNA+ItC+K9A+NdC+PtA+SNC+UdA+W9C+ZMNZ7T5uAFar7x2CdewTCGHtYNw+lBjWtvSO3ueU
+wFrD2H10Kawf7B8yGsGcVN9jOgAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMC0wMS0yMlQxODoyOTo1
+NiswMzowMNISZ64AAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjAtMDEtMjJUMTg6Mjk6NTYrMDM6MDCj
+T98SAAAAAElFTkSuQmCC" />
 </svg>
