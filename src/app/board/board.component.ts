@@ -1,92 +1,73 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { WebSocketService } from '../web-socket.service';
 import { Subscription } from 'rxjs';
+import { fadeInContent } from '@angular/material';
 
 @Component({
   selector: 'app-board',
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.css']
 })
-export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
+export class BoardComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
+  /*   private tile1Disabled: boolean = false;
+    private tile2Disabled: boolean = false;
+    private tile3Disabled: boolean = false;
+    private tile4Disabled: boolean = false;
+    private tile5Disabled: boolean = false;
+    private tile6Disabled: boolean = false;
+    private tile7Disabled: boolean = false;
+    private tile8Disabled: boolean = false;
+    private tile9Disabled: boolean = false; */
   readonly human: string = 'human';
   readonly computer: string = 'computer';
 
-  boardConfig: Array<Array<number>>;
+  tile: number;
+  tile1: any;
+  tile2: any;
+  tile3: any;
+  tile4: any;
+  tile5: any;
+  tile6: any;
+  tile7: any;
+  tile8: any;
+  tile9: any;
   cells: NodeList;
+  boardsize: number = 3;
   cellList: Array<number>;
-  cellClickedReference: any;
-  selectedBoardSize: number;
 
   constructor(private webSocketService: WebSocketService) { }
 
-  boardSizeList: Array<number> = [3, 4, 5, 6, 7, 8, 9, 10];
-
   ngOnInit() {
-    this.cellClickedReference = this.cellClicked.bind(this);
-    this.setupGame(3);
-  }
-
-  setupGame(boardsize) {
-    this.generateBoardConfig(boardsize);
     (<HTMLElement>document.querySelector(".endgame")).style.display = "none";
-
     // Setting up game
-    this.subscription = this.webSocketService.setupGame(boardsize).subscribe((response: any) => {
-      this.makeCellsClickable();
+
+    this.subscription = this.webSocketService.setupGame(this.boardsize).subscribe((response: any) => {
       console.log('setupGame response: ', response);
       // Generating possible cells
       this.cellList = response;
+
       this.subscription.unsubscribe();
     });
-  }
 
-  newBoardSizeSelected() {
-    if (this.boardSizeList.includes(this.selectedBoardSize)) {
-      this.setupGame(this.selectedBoardSize);
-    }
-  }
-
-  makeCellsClickable() {
-    // making cells clickable
     this.cells = document.querySelectorAll('.cell');
     for (let i = 0; i < this.cells.length; i++) {
-      this.cells[i].addEventListener('click', this.cellClickedReference, false);
-    }
-  }
-
-  // This function is called when the document is ready
-  ngAfterViewInit() {
-    this.makeCellsClickable();
-  }
-
-  generateBoardConfig(boardsize: number) {
-    this.boardConfig = [];
-    let arr = [];
-    for (let i = 0; i < (boardsize * boardsize); i++) {
-      arr.push(i)
-      if (arr.length === boardsize) {
-        this.boardConfig.push(arr);
-        arr = [];
-      }
+      this.cells[i].addEventListener('click', this.cellClicked.bind(this), false);
     }
   }
 
   cellClicked(clickedCellEvent) {
     let clickedCell = clickedCellEvent.target.id;
     // disabling clicked cell
-    this.disableCells([+clickedCell]);
+    document.getElementById(clickedCell).removeEventListener('click', this.cellClicked, false);
     // Marking player move in the board
     this.markCell(this.human, clickedCell);
     // Connecting with backend server to get computerMove/Result
     this.subscription = this.webSocketService.getComputerMove(+clickedCell).subscribe((response: any) => {
       console.log('response: ', response);
-      if (Object.keys(response).includes("computerMove")) {
-        this.disableCells([response.computerMove]);
-        this.markCell(this.computer, response.computerMove);
-      }
+      if (Object.keys(response).includes("computerMove")) this.markCell(this.computer, response.computerMove);
       if (response.winner && response.winningCombination) {
-        this.disableCells(this.cellList);
+        this.disableEnableCells(true);
         this.highlightCells(response.winner, response.winningCombination);
         this.showResult(response.winner);
       }
@@ -106,37 +87,66 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     (<HTMLElement>document.querySelector(".endgame .text")).innerText = text;
   }
 
-  highlightCells(winner, cellsNeedingHighlight) {
+  highlightCells(winner, cellsNeedingHiglight) {
+    let className = 'winner';
     if (winner === 'tie') {
-      cellsNeedingHighlight = this.cellList;
+      className = 'tie';
+      cellsNeedingHiglight = this.cellList;
     }
-    for (let i = 0; i < cellsNeedingHighlight.length; i++) {
-      this.markCell(winner, cellsNeedingHighlight[i], true);
+    let cells = document.querySelectorAll(".cell");
+    for (let i = 0; i < cellsNeedingHiglight.length; i++) {
+      let cell = cellsNeedingHiglight[i];
+      cells[cell].className = className;
     }
   }
 
-  markCell(player, cell, winner = null) {
+  markCell(player, cell) {
     if (player === this.computer) {
-      if (winner) {
-        document.getElementById(cell).style.backgroundImage = 'url(assets/img/O_Won.svg)';
-      } else {
-        document.getElementById(cell).style.backgroundImage = 'url(assets/img/O.svg)';
-      }
+      document.getElementById(cell).innerHTML = 'O';
     } else if (player === this.human) {
-      if (winner) {
-        document.getElementById(cell).style.backgroundImage = 'url(assets/img/X_Won.svg)';
-      } else {
-        document.getElementById(cell).style.backgroundImage = 'url(assets/img/X.svg)';
-      }
+      document.getElementById(cell).innerHTML = 'X';
     }
   }
 
-  disableCells(cellList: Array<number>): void {
-    for (let i = 0; i < cellList.length; i++) {
-      let cell = this.cells[cellList[i]];
-      cell.removeEventListener('click', this.cellClickedReference, false);
-      document.getElementById('' + cellList[i]).style.cursor = 'not-allowed';
+  refreshCells(): void {
+    this.tile1 = "";
+    this.tile2 = "";
+    this.tile3 = "";
+    this.tile4 = "";
+    this.tile5 = "";
+    this.tile6 = "";
+    this.tile7 = "";
+    this.tile8 = "";
+    this.tile9 = "";
+  }
+
+  disableEnableCells(disableOrEnable: boolean): void {
+    console.log('Result obtained, disabling cells');
+    for (let i = 0; i < this.cells.length; i++) {
+      this.cells[i].removeEventListener('click', this.cellClicked, false);
     }
+  }
+
+  /*     onCellClicked(tile): void {
+        console.log('tile>>>>>>>>>>', tile);
+        this.markCell(tile, "X");
+        this.subscription = this.webSocketService.recieveMessage(tile).subscribe((computerMove: number) => {
+          if (!(typeof computerMove === 'number')) {
+            console.log("Not a number!");
+          }
+          console.log('computerMove>>>>>>>>>>', computerMove);
+          this.markCell(computerMove, "O");
+          this.subscription.unsubscribe();
+        });
+      } */
+
+  refreshBoard(): void {
+    this.webSocketService.refreshBoard().subscribe(result => {
+      if (result === 'Memory cleared!') {
+        this.refreshCells();
+        this.disableEnableCells(false);
+      }
+    });
   }
 
   ngOnDestroy() {
